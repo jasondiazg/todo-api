@@ -1,0 +1,14 @@
+{
+  "name": "back-end-nodejs",
+  "version": "0.0.1",
+  "description": "This repository is used to teach about nodejs.",
+  "main": "main.js",
+  "scripts": {
+    "api": "node main.js"
+  },
+  "author": "Jason Díaz",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
