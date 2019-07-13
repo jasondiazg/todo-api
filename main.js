@@ -16,13 +16,29 @@ let students =
     ];
 
 let logger = (log) => {
-    console.log(">>>> " + new Date().toUTCString() + " >>>> method: " + log.method + ", message: " + log.message + "\n");
+    if (log.isError) {
+        console.error(">>>> " + new Date().toUTCString() + " >>>> method: " + log.method + ", message: " + log.message + "\n");
+    } else {
+        console.log(">>>> " + new Date().toUTCString() + " >>>> method: " + log.method + ", message: " + log.message + "\n");
+    }
 }
 
 let sendResponse = (options) => {
-    logger({ method: options.method, message: JSON.stringify(options.response) });
+    logger({ method: options.method, message: JSON.stringify(options.response), isError: options.response.error });
     options.res.status(options.httpCode);
     options.res.json(options.response);
+}
+
+let isValid = (student) => {
+    if (!student.name) {
+        return { isValid: false, propertyInvalid: "name" };
+    } else if (!student.surname) {
+        return { isValid: false, propertyInvalid: "surname" };
+    } else if (!student.email) {
+        return { isValid: false, propertyInvalid: "email" };
+    } else {
+        return { isValid: true, propertyInvalid: undefined }
+    }
 }
 
 app.all('/*', (req, res, next) => {
@@ -51,10 +67,10 @@ app.get('/api/student/:id', (req, res) => {
 
     if (index != -1) {
         let response = { "status": "ok", "message": "Student queried successfully", "error": false, "data": students[index] };
-        sendResponse({ method: "GET /api/student" + idStudent, response: response, httpCode: 200, res: res });
+        sendResponse({ method: "GET /api/student/" + idStudent, response: response, httpCode: 200, res: res });
     } else {
         let response = { "status": "error", "message": "Student not found", "error": true, "data": undefined };
-        sendResponse({ method: "GET /api/student" + idStudent, response: response, httpCode: 400, res: res });
+        sendResponse({ method: "GET /api/student/" + idStudent, response: response, httpCode: 400, res: res });
     }
 });
 
@@ -63,14 +79,9 @@ app.post('/api/student', (req, res) => {
     let newStudent = req.body;
 
     // Validations
-    if (!newStudent.name) {
-        let response = { "status": "error", "message": "Student name is required", "error": true, "data": newStudent };
-        sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res });
-    } else if (!newStudent.surname) {
-        let response = { "status": "error", "message": "Student surname is required", "error": true, "data": newStudent };
-        sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res });
-    } else if (!newStudent.email) {
-        let response = { "status": "error", "message": "Student email is required", "error": true, "data": newStudent };
+    let validation = isValid(newStudent);
+    if (!validation.isValid) {
+        let response = { "status": "error", "message": "Student " + validation.propertyInvalid + " is required", "error": true, "data": newStudent };
         sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res });
     } else {
         students.sort((a, b) => {
@@ -84,22 +95,28 @@ app.post('/api/student', (req, res) => {
         let newId = students[students.length - 1].id + 1;
         newStudent.id = newId;
         students.push(newStudent);
-        
+
         let response = { "status": "ok", "message": "Student saved successfully", "error": false, "data": newStudent };
         sendResponse({ method: "POST /api/student", response: response, httpCode: 202, res: res });
     }
 });
 
-app.put('/api/student', function (req, res) {
+app.put('/api/student', (req, res) => {
 
     let student = req.body;
 
     let index = students.map(student => student.id).indexOf(student.id);
 
     if (index != -1) {
-        let response = { "status": "ok", "message": "Student updated successfully", "error": false, "data": student };
-        students[index] = student;
-        sendResponse({ method: "PUT /api/student", response: response, httpCode: 202, res: res });
+        let validation = isValid(student);
+        if (!validation.isValid) {
+            let response = { "status": "error", "message": "Student " + validation.propertyInvalid + " is required", "error": true, "data": student };
+            sendResponse({ method: "PUT /api/student", response: response, httpCode: 400, res: res });
+        } else {
+            students[index] = student;
+            let response = { "status": "ok", "message": "Student updated successfully", "error": false, "data": student };
+            sendResponse({ method: "PUT /api/student", response: response, httpCode: 202, res: res });
+        }
     } else {
         let response = { "status": "error", "message": "Student not found", "error": true, "data": undefined };
         sendResponse({ method: "PUT /api/student", response: response, httpCode: 400, res: res });
@@ -107,7 +124,7 @@ app.put('/api/student', function (req, res) {
 
 });
 
-app.delete('/api/student/:id', function (req, res) {
+app.delete('/api/student/:id', (req, res) => {
 
     let idStudent = req.params.id;
 
@@ -116,10 +133,10 @@ app.delete('/api/student/:id', function (req, res) {
     if (index != -1) {
         let response = { "status": "ok", "message": "Student deleted successfully", "error": false, "data": undefined };
         students.splice(index, 1);
-        sendResponse({ method: "DELETE /api/student", response: response, httpCode: 202, res: res });
+        sendResponse({ method: "DELETE /api/student/" + idStudent, response: response, httpCode: 202, res: res });
     } else {
         let response = { "status": "error", "message": "Student not found", "error": true, "data": undefined };
-        sendResponse({ method: "DELETE /api/student", response: response, httpCode: 400, res: res });
+        sendResponse({ method: "DELETE /api/student/" + idStudent, response: response, httpCode: 400, res: res });
     }
 
 });
