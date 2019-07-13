@@ -19,6 +19,12 @@ let logger = (log) => {
     console.log(">>>> " + new Date().toUTCString() + " >>>> method: " + log.method + ", message: " + log.message + "\n");
 }
 
+let sendResponse = (options) => {
+    logger({ method: options.method, message: JSON.stringify(options.response) });
+    options.res.status(options.httpCode);
+    options.res.json(options.response);
+}
+
 app.all('/*', (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -30,14 +36,10 @@ app.get('/api/student', (req, res) => {
 
     if (students.length > 0) {
         let response = { "status": "ok", "message": "Students queried successfully", "data": students };
-        logger({ method: "GET /api/student", message: JSON.stringify(response) });
-        res.status(200);
-        res.json(response);
+        sendResponse({ method: "GET /api/student", response: response, httpCode: 200, res: res});
     } else {
         let response = { "status": "ok", "message": "no data", "data": undefined };
-        logger({ method: "GET /api/student", message: JSON.stringify(response) });
-        res.status(204);
-        res.json(response);
+        sendResponse({ method: "GET /api/student", response: response, httpCode: 204, res: res});
     }
 });
 
@@ -49,14 +51,10 @@ app.get('/api/student/:id', (req, res) => {
 
     if (index != -1) {
         let response = { "status": "ok", "message": "Student queried successfully", "data": students[index] };
-        logger({ method: "GET /api/student/" + idStudent, message: JSON.stringify(response) });
-        res.status(200);
-        res.json(response);
+        sendResponse({ method: "GET /api/student" + idStudent, response: response, httpCode: 200, res: res});
     } else {
         let response = { "status": "error", "message": "Student not found", "data": undefined };
-        logger({ method: "GET /api/student" + idStudent, message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "GET /api/student" + idStudent, response: response, httpCode: 400, res: res});
     }
 });
 
@@ -67,19 +65,13 @@ app.post('/api/student', (req, res) => {
     // Validations
     if (!newStudent.name) {
         let response = { "status": "error", "message": "Student name is required", "data": newStudent };
-        logger({ method: "POST /api/student", message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res});
     } else if (!newStudent.surname) {
         let response = { "status": "error", "message": "Student surname is required", "data": newStudent };
-        logger({ method: "POST /api/student", message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res});
     } else if (!newStudent.email) {
         let response = { "status": "error", "message": "Student email is required", "data": newStudent };
-        logger({ method: "POST /api/student", message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "POST /api/student", response: response, httpCode: 400, res: res});
     } else {
         students.sort((a, b) => {
             if (a.id < b.id)
@@ -94,9 +86,7 @@ app.post('/api/student', (req, res) => {
         students.push(newStudent);
         
         let response = { "status": "ok", "message": "Student saved successfully", "data": newStudent };
-        logger({ method: "POST /api/student", message: JSON.stringify(response) });
-        res.status(202);
-        res.json(response);
+        sendResponse({ method: "POST /api/student", response: response, httpCode: 202, res: res});
     }
 });
 
@@ -108,15 +98,11 @@ app.put('/api/student', function (req, res) {
 
     if (index != -1) {
         let response = { "status": "ok", "message": "Student updated successfully", "data": student };
-        logger({ method: "PUT /api/student", message: JSON.stringify(response) });
         students[index] = student;
-        res.status(202);
-        res.json(response);
+        sendResponse({ method: "PUT /api/student", response: response, httpCode: 202, res: res});
     } else {
         let response = { "status": "error", "message": "Student not found", "data": undefined };
-        logger({ method: "PUT /api/student", message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "PUT /api/student", response: response, httpCode: 400, res: res});
     }
 
 });
@@ -129,15 +115,11 @@ app.delete('/api/student/:id', function (req, res) {
 
     if (index != -1) {
         let response = { "status": "ok", "message": "Student deleted successfully", "data": undefined };
-        logger({ method: "DELETE /api/student/" + idStudent, message: JSON.stringify(response) });
         students.splice(index, 1);
-        res.status(202);
-        res.json(response);
+        sendResponse({ method: "DELETE /api/student", response: response, httpCode: 202, res: res});
     } else {
         let response = { "status": "error", "message": "Student not found", "data": undefined };
-        logger({ method: "DELETE /api/student/" + idStudent, message: JSON.stringify(response) });
-        res.status(400);
-        res.json(response);
+        sendResponse({ method: "DELETE /api/student", response: response, httpCode: 400, res: res});
     }
 
 });
