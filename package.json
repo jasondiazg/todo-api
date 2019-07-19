@@ -4,11 +4,12 @@
   "description": "This repository is used to teach about nodejs.",
   "main": "main.js",
   "scripts": {
-    "api": "node main.js"
+    "api": "node server.js"
   },
   "author": "Jason Díaz",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.6.5"
   }
 }

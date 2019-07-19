@@ -48,8 +48,13 @@ app.all('/*', (req, res, next) => {
     next();
 });
 
-app.get('/api/student', (req, res) => {
+app.get('/api/student/metadata', (req, res) => {
+    let metadata = ["Order", "Id", "Name", "Surname", "Birthdate", "Gender", "Email", "Actions"];
+    let response = { "status": "ok", "message": "Students metadata queried successfully", "error": false, "data": metadata };
+    sendResponse({ method: "GET /api/student/metadata", response: response, httpCode: 200, res: res });
+});
 
+app.get('/api/student', (req, res) => {
     if (students.length > 0) {
         let response = { "status": "ok", "message": "Students queried successfully", "error": false, "data": students };
         sendResponse({ method: "GET /api/student", response: response, httpCode: 200, res: res });
@@ -60,7 +65,6 @@ app.get('/api/student', (req, res) => {
 });
 
 app.get('/api/student/:id', (req, res) => {
-
     let idStudent = req.params.id;
 
     let index = students.map(student => student.id).indexOf(parseInt(idStudent));
@@ -75,7 +79,6 @@ app.get('/api/student/:id', (req, res) => {
 });
 
 app.post('/api/student', (req, res) => {
-
     let newStudent = req.body;
 
     // Validations
@@ -102,7 +105,6 @@ app.post('/api/student', (req, res) => {
 });
 
 app.put('/api/student', (req, res) => {
-
     let student = req.body;
 
     let index = students.map(student => student.id).indexOf(student.id);
@@ -125,7 +127,6 @@ app.put('/api/student', (req, res) => {
 });
 
 app.delete('/api/student/:id', (req, res) => {
-
     let idStudent = req.params.id;
 
     let index = students.map(student => student.id).indexOf(parseInt(idStudent));
