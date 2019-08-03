@@ -2,14 +2,16 @@
   "name": "back-end-nodejs",
   "version": "0.0.1",
   "description": "This repository is used to teach about nodejs.",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "api": "node server.js"
   },
   "author": "Jason Díaz",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.5"
   }
 }

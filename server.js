@@ -4,11 +4,21 @@ const bodyParser = require('body-parser');
 const wrapper = require('./app/utils/wrapper.js');
 const logger = require('./app/utils/logger.js');
 const dbConfig = require('./app/config/database.config.js');
-const studentRoutes = require('./app/routes/student.routes.js')
+const studentRoutes = require('./app/routes/student.routes.js');
+const userRoutes = require('./app/routes/user.routes.js');
+const authRoutes = require('./app/routes/auth.routes.js');
 
 // create express app
 const app = express();
 const port = 3001;
+
+// server configurations
+app.all('/*', (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type");
+    next();
+});
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,11 +44,13 @@ mongoose.connect(dbConfig.url, {
 // define a simple route
 app.get('/api', (req, res) => {
     const response = { "status": "ok", "message": "Academik api is running in the port " + port + ". It is built with nodejs, express and mongodb.", "error": false, "data": undefined };
-    wrapper.sendResponse({ method: "GET /api", response: response, httpCode: 200, res: res });
+    return wrapper.sendResponse({ method: "GET /api", response: response, httpCode: 200, res: res });
 });
 
 // Routes to expose
+authRoutes(app);
 studentRoutes(app);
+userRoutes(app);
 
 // listen for requests
 app.listen(port, () => {
