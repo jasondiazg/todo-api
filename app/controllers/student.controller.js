@@ -1,5 +1,5 @@
-const Student = require('../models/student.model.js');
-const wrapper = require('../utils/wrapper.js');
+const Student = require('../models/student.model');
+const wrapper = require('../utils/wrapper');
 
 // internal functions
 let isValid = (student) => {

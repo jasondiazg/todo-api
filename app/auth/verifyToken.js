@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const config = require('./secrets.js');
-const wrapper = require('../utils/wrapper.js');
+const config = require('./secrets');
+const wrapper = require('../utils/wrapper');
 
 const verifyToken = (req, res, next) => {
 

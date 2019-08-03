@@ -1,8 +1,8 @@
-const User = require('../models/user.model.js');
-const wrapper = require('../utils/wrapper.js');
+const User = require('../models/user.model');
+const wrapper = require('../utils/wrapper');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../auth/secrets.js');
+const config = require('../auth/secrets');
 
 exports.login = (req, res) => {
     User.findOne({ username: req.body.username }, (error, user) => {

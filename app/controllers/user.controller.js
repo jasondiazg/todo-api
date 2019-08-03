@@ -1,5 +1,5 @@
-const User = require('../models/user.model.js');
-const wrapper = require('../utils/wrapper.js');
+const User = require('../models/user.model');
+const wrapper = require('../utils/wrapper');
 const bcrypt = require('bcryptjs');
 
 // internal functions

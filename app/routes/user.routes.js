@@ -1,6 +1,6 @@
 module.exports = (app) => {
-    const users = require('../controllers/user.controller.js');
-    const verifyToken = require('../auth/verifyToken.js');
+    const users = require('../controllers/user.controller');
+    const verifyToken = require('../auth/verifyToken');
 
     // Retrieve user metadata
     app.get('/api/user/metadata', verifyToken, users.metadata);

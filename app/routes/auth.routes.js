@@ -1,6 +1,6 @@
 module.exports = (app) => {
-    const auth = require('../controllers/auth.controller.js');
-    const verifyToken = require('../auth/verifyToken.js');
+    const auth = require('../controllers/auth.controller');
+    const verifyToken = require('../auth/verifyToken');
 
     // Login an user
     app.post('/api/login', auth.login);
