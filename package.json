@@ -4,9 +4,9 @@
   "description": "This repository is used to teach about nodejs.",
   "main": "server.js",
   "scripts": {
-    "api": "node server.js"
+    "start": "node server.js"
   },
-  "author": "Jason Díaz",
+  "author": "Jason Díaz G.",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

@@ -24,7 +24,7 @@ exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
         let response = { "status": "error", "message": "User content can not be empty", "error": true, "data": undefined };
-        return wrapper.sendResponse({ method: "POST /api/user", response: response, httpCode: 400, res: res });
+        return wrapper.sendResponse({ method: "POST /api/register", response: response, httpCode: 400, res: res });
     } else {
         // Create a User
         const newUser = new User({
@@ -37,7 +37,7 @@ exports.create = (req, res) => {
         let validation = isValid(newUser);
         if (!validation.isValid) {
             let response = { "status": "error", "message": "User " + validation.propertyInvalid + " is required", "error": true, "data": newUser };
-            return wrapper.sendResponse({ method: "POST /api/user", response: response, httpCode: 400, res: res });
+            return wrapper.sendResponse({ method: "POST /api/register", response: response, httpCode: 400, res: res });
         } else {
             // encrypt password
             newUser.password = bcrypt.hashSync(newUser.password, 8);
@@ -45,10 +45,10 @@ exports.create = (req, res) => {
             newUser.save()
                 .then(data => {
                     let response = { "status": "ok", "message": "User saved successfully", "error": false, "data": data };
-                    return wrapper.sendResponse({ method: "POST /api/user", response: response, httpCode: 202, res: res });
+                    return wrapper.sendResponse({ method: "POST /api/register", response: response, httpCode: 202, res: res });
                 }).catch(error => {
                     let response = { "status": "error", "message": "Some error occurred while creating the User", "error": true, "data": error.message || undefined };
-                    return wrapper.sendResponse({ method: "POST /api/user", response: response, httpCode: 500, res: res });
+                    return wrapper.sendResponse({ method: "POST /api/register", response: response, httpCode: 500, res: res });
                 });
         }
     }

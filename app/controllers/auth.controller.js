@@ -10,13 +10,13 @@ exports.login = (req, res) => {
             let response = { "status": "error", "message": "Some error occurred while login the User", "error": true, "data": error.message || undefined };
             return wrapper.sendResponse({ method: "POST /api/login", response: response, httpCode: 500, res: res });
         } else if (!user) {
-            let response = { "status": "error", "message": "User or password is incorrect", "error": true, "data": undefined };
+            let response = { "status": "error", "message": "User or password are incorrect", "error": true, "data": undefined };
             return wrapper.sendResponse({ method: "POST /api/login", response: response, httpCode: 401, res: res });
         } else {
             // check if the password is valid
             let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
             if (!passwordIsValid) {
-                let response = { "status": "error", "message": "User or password is incorrect", "error": true, "data": undefined };
+                let response = { "status": "error", "message": "User or password are incorrect", "error": true, "data": undefined };
                 return wrapper.sendResponse({ method: "POST /api/login", response: response, httpCode: 401, res: res });
             } else {
                 // if user is found and password is valid
