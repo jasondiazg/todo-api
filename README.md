@@ -16,4 +16,4 @@ The API manages:
 2. Install dependencies `npm install`.
 3. Execute project `npm start`.
 
-This API is managed with an UI in this other project [Todo-App](ttps://github.com/jasondiazg/todo-app).
+This API is managed with an UI in this other project [Todo-App](https://github.com/jasondiazg/todo-app).
