@@ -62,7 +62,7 @@ exports.findAll = (req, res) => {
                 let response = { "status": "ok", "message": "Users queried successfully", "error": false, "data": users };
                 return wrapper.sendResponse({ method: "GET /api/user", response: response, httpCode: 200, res: res });
             } else {
-                let response = { "status": "ok", "message": "no data", "error": false, "data": undefined };
+                let response = { "status": "ok", "message": "There is no data", "error": false, "data": undefined };
                 return wrapper.sendResponse({ method: "GET /api/user", response: response, httpCode: 200, res: res });
             }
         }).catch(error => {
